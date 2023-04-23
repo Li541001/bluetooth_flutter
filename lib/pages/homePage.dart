@@ -1,9 +1,16 @@
 import 'package:first_test/components/controlSlider.dart';
 import 'package:flutter/cupertino.dart';
+import 'bluetooth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
+
+  void changePage(context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => FlutterBlueApp()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return (Scaffold(
@@ -30,7 +37,14 @@ class HomePage extends StatelessWidget {
               margin: EdgeInsets.symmetric(vertical: 50.0, horizontal: 10.0),
               child: Image(image: AssetImage('assets/carn.png')),
             ),
-            ControlSlider()
+            ControlSlider(),
+            TextButton(
+                style: TextButton.styleFrom(backgroundColor: Colors.lightBlue),
+                onPressed: () => changePage(context),
+                child: Text(
+                  '換頁按鈕',
+                  style: TextStyle(color: Colors.black),
+                ))
           ])),
         )));
   }

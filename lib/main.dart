@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'bluetooth.dart';
+import 'pages/bluetooth.dart';
 import 'pages/homePage.dart';
 
 void main() {
