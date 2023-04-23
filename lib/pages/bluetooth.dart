@@ -8,10 +8,27 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 
-class FlutterBlueApp extends StatelessWidget {
-  FlutterBlueApp({super.key});
+class FlutterBlueApp extends StatefulWidget {
+  @override
+  State<FlutterBlueApp> createState() => _FlutterBlueAppState();
+}
+
+class _FlutterBlueAppState extends State<FlutterBlueApp> {
   FlutterBlue flutterBlue = FlutterBlue.instance;
-  String? result;
+
+  void scanDevice() {
+    String? result;
+    flutterBlue.startScan(timeout: Duration(seconds: 5));
+    var subsrciption = flutterBlue.scanResults.listen((event) {
+      for (ScanResult r in event) {
+        result =
+            '${r.device.name} found! rssi: ${r.rssi} \n id: ${r.device.id} ';
+        print(
+            '!!!!!!!!!!!!!!!!!!!!!!!!${r.device.name} found! rssi: ${r.rssi} \n id: ${r.device.id} ');
+      }
+    });
+    flutterBlue.stopScan();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,33 +44,13 @@ class FlutterBlueApp extends StatelessWidget {
             Padding(padding: EdgeInsets.all(20), child: Text('bluetooth test')),
             TextButton(
                 style: TextButton.styleFrom(backgroundColor: Colors.lightBlue),
-                onPressed: () => result = scanDevice(flutterBlue),
+                onPressed: () => null,
                 child: Text('掃描')),
-            Text('${result}')
           ],
         ))));
   }
 }
 
-void handle() {}
-
-String scanDevice(FlutterBlue flutterBlue) {
-  String? result;
-  flutterBlue.startScan(timeout: Duration(seconds: 5));
-
-  var subsrciption = flutterBlue.scanResults.listen((event) {
-    for (ScanResult r in event) {
-      result = '${r.device.name} found! rssi: ${r.rssi} \n id: ${r.device.id} ';
-      print(
-          '!!!!!!!!!!!!!!!!!!!!!!!!${r.device.name} found! rssi: ${r.rssi} \n id: ${r.device.id} ');
-    }
-  });
-
-  flutterBlue.stopScan();
-  return result;
-}
-
-void connectDevice() {}
 
 
 
