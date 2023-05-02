@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +23,8 @@ class _BluetoothPageState extends State<BluetoothPage> {
   bool get isConnected => connection != null && connection!.isConnected;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int? _deviceState;
+  Uint8List? _data;
+  Timer? _timer;
 
   // initState-------------------------------------------------------function
   @override
@@ -84,10 +90,12 @@ class _BluetoothPageState extends State<BluetoothPage> {
       isDisconnecting = true;
       connection!.dispose();
       connection = null;
+      _timer!.cancel();
     }
     super.dispose();
   }
 
+  // _getDeviceItems-------------------------------------------------function
   List<DropdownMenuItem<BluetoothDevice>> _getDeviceItems() {
     List<DropdownMenuItem<BluetoothDevice>> item = [];
     if (_deviceList.isEmpty) {
@@ -105,6 +113,7 @@ class _BluetoothPageState extends State<BluetoothPage> {
     return item;
   }
 
+  // _connect-------------------------------------------------function
   void _connect() async {
     if (_device == null) {
       show('No device selected');
@@ -117,16 +126,23 @@ class _BluetoothPageState extends State<BluetoothPage> {
           setState(() {
             _conncted = true;
           });
+          _timer = Timer.periodic(Duration(seconds: 1), (time) {
+            connection!.input!.listen((data) {
+              print('data: ${ascii.decode(data)}');
+              setState(() {
+                _data = data;
+              });
+            }).onDone(() {
+              if (isDisconnecting) {
+                print('Disconnecting locally!');
+              } else {
+                print('Disconnecting remotely');
+              }
 
-          connection!.input!.listen(null).onDone(() {
-            if (isDisconnecting) {
-              print('Disconnecting locally!');
-            } else {
-              print('Disconnecting remotely');
-            }
-            if (this.mounted) {
-              setState(() {});
-            }
+              if (this.mounted) {
+                setState(() {});
+              }
+            });
           });
         }).catchError((error) {
           print('Cannot connect, exception occurred');
@@ -146,6 +162,16 @@ class _BluetoothPageState extends State<BluetoothPage> {
         _conncted = false;
       });
     }
+  }
+
+  void _sendOnmessageToBluetooth() async {
+    Uint8List myUint8List = Uint8List.fromList(utf8.encode('1'));
+    connection!.output.add(myUint8List);
+    await connection!.output.allSent;
+    show('傳送成功');
+    setState(() {
+      _deviceState = 1;
+    });
   }
 
   bool _conncted = false;
@@ -198,6 +224,14 @@ class _BluetoothPageState extends State<BluetoothPage> {
                 child: Text(_conncted ? 'Disconnect' : 'Connect'),
               )
             ],
+          ),
+          TextButton(
+            onPressed: _sendOnmessageToBluetooth,
+            child: Text(
+              '$_data',
+              style: TextStyle(color: Colors.black),
+            ),
+            style: TextButton.styleFrom(backgroundColor: Colors.blue),
           )
         ],
       )),
