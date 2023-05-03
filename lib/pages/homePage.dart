@@ -157,9 +157,6 @@ class HomePageState extends State<HomePage> {
           setState(() {
             _conncted = true;
           });
-          // connection!.input!.listen((data) {
-          //   datas = ascii.decode(data);
-          // });
         }).catchError((error) {
           print('Cannot connect, exception occurred');
           print(error);
@@ -169,9 +166,11 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-  void changePage(context) async {
+  void changePage(context) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ControlPage()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => ControlPage(connection: connection!)));
   }
 
   Future show(
@@ -229,12 +228,14 @@ class HomePageState extends State<HomePage> {
                         onPressed: () => _conncted ? null : _connect(),
                         text: '連接設備',
                         disabled: !_conncted,
+                        size: 200,
                       ),
                       SizedBox(height: 20),
                       Button(
                         onPressed: () => _conncted ? changePage(context) : null,
                         text: '切換頁面',
                         disabled: _conncted,
+                        size: 200,
                       )
                     ],
                   ),

@@ -5,11 +5,13 @@ class Button extends StatelessWidget {
   VoidCallback? onPressed;
   String? text;
   bool? disabled = true;
+  double? size;
   Button(
       {super.key,
       required this.onPressed,
       required this.text,
-      required this.disabled});
+      required this.disabled,
+      required this.size});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class Button extends StatelessWidget {
             backgroundColor: disabled!
                 ? Color.fromARGB(255, 217, 170, 116)
                 : Colors.blueGrey,
-            fixedSize: Size(200, 75),
+            fixedSize: Size(size!, 75),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15))),
         onPressed: onPressed,
