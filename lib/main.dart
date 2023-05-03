@@ -1,9 +1,17 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:provider/provider.dart';
 import 'pages/bluetooth.dart';
 import 'pages/homePage.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => BluetoothData(),
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,5 +28,19 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: HomePage(),
     );
+  }
+}
+
+class BluetoothData extends ChangeNotifier {
+  String _datas = '';
+  String get datas => _datas;
+  BluetoothConnection? connection;
+
+  void getData() {
+    connection!.input!.listen((data) {
+      print(_datas);
+      _datas = ascii.decode(data);
+      notifyListeners();
+    });
   }
 }

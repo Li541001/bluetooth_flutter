@@ -23,7 +23,10 @@ class ValueDisplayPage extends StatelessWidget {
         child: Column(children: [
           //TODO: 亮度圖
           //TODO: 空氣品質圖
-          Button(onPressed: () => changePage(context), text: '溫度顯示頁面'),
+          Button(
+              onPressed: () => changePage(context),
+              text: '溫度顯示頁面',
+              disabled: true),
         ]),
       ),
     );

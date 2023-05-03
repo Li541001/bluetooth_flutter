@@ -17,9 +17,9 @@ class KeepButton extends StatelessWidget {
         style: TextButton.styleFrom(
             backgroundColor:
                 value ? Color.fromARGB(255, 217, 170, 116) : Colors.blueGrey,
-            fixedSize: Size(120, 60),
+            fixedSize: Size(140, 80),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30))),
+                borderRadius: BorderRadius.circular(40))),
         onPressed: onPressed,
         child: Text(
           '${this.text}',

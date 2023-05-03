@@ -29,8 +29,15 @@ class TempDisplayPage extends StatelessWidget {
         child: Column(children: [
           //TODO: wave circle
           Text(''),
-          Button(onPressed: () => changePage(context), text: '數值顯示頁面'),
-          Button(onPressed: () => changePage2(context), text: '控制頁面')
+          Button(
+            onPressed: () => changePage(context),
+            text: '數值顯示頁面',
+            disabled: true,
+          ),
+          Button(
+              onPressed: () => changePage2(context),
+              text: '控制頁面',
+              disabled: true)
         ]),
       ),
     );

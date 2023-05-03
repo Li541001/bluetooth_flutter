@@ -24,7 +24,6 @@ class _BluetoothPageState extends State<BluetoothPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int? _deviceState;
   Uint8List? _data;
-  Timer? _timer;
 
   // initState-------------------------------------------------------function
   @override
@@ -90,7 +89,6 @@ class _BluetoothPageState extends State<BluetoothPage> {
       isDisconnecting = true;
       connection!.dispose();
       connection = null;
-      _timer!.cancel();
     }
     super.dispose();
   }
@@ -126,23 +124,22 @@ class _BluetoothPageState extends State<BluetoothPage> {
           setState(() {
             _conncted = true;
           });
-          _timer = Timer.periodic(Duration(seconds: 1), (time) {
-            connection!.input!.listen((data) {
-              print('data: ${ascii.decode(data)}');
-              setState(() {
-                _data = data;
-              });
-            }).onDone(() {
-              if (isDisconnecting) {
-                print('Disconnecting locally!');
-              } else {
-                print('Disconnecting remotely');
-              }
 
-              if (this.mounted) {
-                setState(() {});
-              }
+          connection!.input!.listen((data) {
+            print('data: ${ascii.decode(data)}');
+            setState(() {
+              _data = data;
             });
+          }).onDone(() {
+            if (isDisconnecting) {
+              print('Disconnecting locally!');
+            } else {
+              print('Disconnecting remotely');
+            }
+
+            if (this.mounted) {
+              setState(() {});
+            }
           });
         }).catchError((error) {
           print('Cannot connect, exception occurred');
