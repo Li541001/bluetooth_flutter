@@ -6,13 +6,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 //TODO: 測試、打電話權限
 class AlertBox extends StatelessWidget {
+  VoidCallback? leave;
+  AlertBox({super.key, required this.leave()});
+
   void callPhone() async {
     Uri uri = Uri(scheme: 'tel', path: '0985513233');
     await launchUrl(uri);
-  }
-
-  void leave(context) {
-    Navigator.of(context).pop();
   }
 
   @override
@@ -46,7 +45,7 @@ class AlertBox extends StatelessWidget {
               width: 20,
             ),
             Button(
-                onPressed: () => leave(context),
+                onPressed: () => leave!(),
                 text: '離開',
                 disabled: true,
                 size: 120),

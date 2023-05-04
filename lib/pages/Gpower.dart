@@ -20,11 +20,19 @@ class GpowerState extends State<Gpower> {
 
   bool isConnect = false;
 
+  bool isAccident = false;
+
+  void leave(context) {
+    isAccident = false;
+    Navigator.of(context).pop();
+  }
+
   void accidentHappen() {
+    isAccident = true;
     showDialog(
         context: context,
         builder: (context) {
-          return AlertBox();
+          return AlertBox(leave: () => leave(context));
         });
   }
 
@@ -42,7 +50,7 @@ class GpowerState extends State<Gpower> {
 
       widget.connection!.input!.listen((data) {
         datas = ascii.decode(data);
-        if (datas == 'w') {
+        if (datas == 'w' && isAccident == false) {
           accidentHappen();
         }
       });

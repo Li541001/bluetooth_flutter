@@ -32,6 +32,7 @@ class _ControlPageState extends State<ControlPage> {
   String? img = 'assets/00percentn.png';
   String? imgStatus = '25';
   String? datas;
+  bool isAccident = false;
 
   void randomTemp() {
     double temp;
@@ -58,11 +59,19 @@ class _ControlPageState extends State<ControlPage> {
     });
   }
 
+  void leave(context) {
+    isAccident = false;
+    Navigator.of(context).pop();
+  }
+
   void accidentHappen() {
+    isAccident = true;
     showDialog(
         context: context,
         builder: (context) {
-          return AlertBox();
+          return AlertBox(
+            leave: () => leave(context),
+          );
         });
   }
 
@@ -123,7 +132,7 @@ class _ControlPageState extends State<ControlPage> {
       asciiText = ascii.decode(data);
       print(asciiText);
 
-      if (asciiText == 'w') {
+      if (asciiText == 'w' && isAccident == false) {
         accidentHappen();
       } else if (asciiText == 'a') {
         buffterStatus = 4;
