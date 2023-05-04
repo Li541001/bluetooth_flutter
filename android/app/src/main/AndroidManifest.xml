@@ -11,7 +11,7 @@
    <application
         android:label="車用玻璃控制系統"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/window">
         <activity
             android:name=".MainActivity"
             android:exported="true"
