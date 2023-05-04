@@ -16,20 +16,22 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
+import '../components/alert.dart';
 import '../main.dart';
 
 //TODO: 離開斷開連線
 class ControlPage extends StatefulWidget {
-  BluetoothConnection connection;
-  ControlPage({super.key, required this.connection});
+  BluetoothConnection? connection;
+  BluetoothDevice? device;
+  ControlPage({super.key, required this.connection, required this.device});
   @override
   State<ControlPage> createState() => _ControlPageState();
 }
 
 class _ControlPageState extends State<ControlPage> {
   bool _value = false;
-  String? img;
-  String? imgStatus;
+  String? img = 'assets/00percentn.png';
+  String? imgStatus = '25';
   String? datas;
 
   void handleMain() {
@@ -46,10 +48,18 @@ class _ControlPageState extends State<ControlPage> {
     });
   }
 
+  void accidentHappen() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertBox();
+        });
+  }
+
   void sendData(String text) async {
     Uint8List myUint8List = Uint8List.fromList(utf8.encode(text));
-    widget.connection.output.add(myUint8List);
-    await widget.connection.output.allSent;
+    widget.connection!.output.add(myUint8List);
+    await widget.connection!.output.allSent;
   }
 
   void changeImg(String data) {
@@ -90,35 +100,34 @@ class _ControlPageState extends State<ControlPage> {
   ValueNotifier<double>? valueNotifier;
   ValueNotifier<double>? valueNotifier2;
   double tempValue = 20;
-  double lightValue = 30;
-  double airValue = 213;
+  double lightValue = 20;
+  double airValue = 200;
 
   @override
   void initState() {
     String buffter = '';
-    int buffterStatus = 0;
+    int buffterStatus = 4;
     String asciiText;
-    widget.connection.input!.listen((data) {
+    double tempValue;
+    widget.connection!.input!.listen((data) {
       asciiText = ascii.decode(data);
+      print(asciiText);
 
-      if (asciiText == 'a') {
-        changeImg(asciiText);
-      } else if (asciiText == 'b') {
-        changeImg(asciiText);
-      } else if (asciiText == 'c') {
-        changeImg(asciiText);
-      } else if (asciiText == 'd') {
-        changeImg(asciiText);
-      } else if (asciiText == 'e') {
-        changeImg(asciiText);
-      } else if (asciiText == 'x') {
-        buffterStatus = 1;
+      if (asciiText == 'w') {
+        accidentHappen();
+      } else if (asciiText == 'a') {
+        buffterStatus = 4;
         setState(() {
           airValue = double.parse(buffter);
-          airValue = airValue / 1000 * 100;
+          tempValue = airValue / 1000 * 100;
 
-          valueNotifier2!.value = airValue;
+          valueNotifier2!.value = tempValue;
         });
+
+        buffter = '';
+      } else if (asciiText == 'x') {
+        buffterStatus = 1;
+        changeImg(buffter);
 
         buffter = '';
       } else if (asciiText == 'y') {
@@ -147,6 +156,8 @@ class _ControlPageState extends State<ControlPage> {
         buffter += asciiText;
       } else if (buffterStatus == 3) {
         buffter += asciiText;
+      } else if (buffterStatus == 4) {
+        buffter = asciiText;
       }
 
       setState(() {
@@ -176,6 +187,7 @@ class _ControlPageState extends State<ControlPage> {
                 padding: EdgeInsets.only(top: 20.0),
                 child: Row(
                   children: [
+                    // WindowDisplay(img: img, status: imgStatus),
                     WindowDisplay(img: img, status: imgStatus),
                     SizedBox(width: 20.0),
                     Column(
@@ -210,108 +222,162 @@ class _ControlPageState extends State<ControlPage> {
               action4: () => sendData('D'),
               action5: () => sendData('E'),
             ),
-            const SizedBox(
-              height: 50,
-            ),
-            Row(children: [
-              SizedBox(
-                width: 20,
-              ),
-              Text(
-                '溫度',
-                style: TextStyle(fontSize: 20),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              Text(
-                '$tempValue°C',
-                style: TextStyle(fontSize: 20),
-              )
-            ]),
-            CircleWaveProgress(
-              size: 240,
-              borderWidth: 10.0,
-              backgroundColor: Colors.transparent,
-              borderColor: Colors.grey,
-              waveColor: Color.fromARGB(181, 33, 149, 243),
-              progress: tempValue,
-            ),
-            SizedBox(height: 20),
-            Row(children: [
-              SizedBox(
-                width: 20,
-              ),
-              Text(
-                '亮度',
-                style: TextStyle(fontSize: 20),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-            ]),
-            SimpleCircularProgressBar(
-              size: 200,
-              valueNotifier: valueNotifier,
-              progressStrokeWidth: 24,
-              backStrokeWidth: 24,
-              mergeMode: true,
-              onGetText: (value) {
-                return Text(
-                  '${value.toInt()}%',
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.lightBlue,
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-              },
-              progressColors: const [Colors.cyan, Colors.purple],
-              backColor: Colors.black.withOpacity(0.4),
-            ),
-            SizedBox(height: 50),
-            Row(children: [
-              SizedBox(
-                width: 20,
-              ),
-              Text(
-                '空氣品質',
-                style: TextStyle(fontSize: 20),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-            ]),
             SizedBox(
               height: 20,
-            ),
-            SimpleCircularProgressBar(
-              size: 200,
-              valueNotifier: valueNotifier2,
-              progressStrokeWidth: 24,
-              backStrokeWidth: 24,
-              mergeMode: true,
-              onGetText: (value) {
-                return Text(
-                  '${value.toInt()}ppm',
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.lightBlue,
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-              },
-              progressColors: const [Colors.cyan, Colors.purple],
-              backColor: Colors.black.withOpacity(0.4),
-            ),
-            SizedBox(
-              height: 40,
             ),
             Button(
               onPressed: () => changePage(context),
               text: '切換頁面',
               disabled: true,
               size: 300,
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            Line(
+              color: Colors.black,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(children: [
+              SizedBox(
+                width: 20,
+              ),
+              Text(
+                '數值監控',
+                style: TextStyle(fontSize: 20),
+              )
+            ]),
+            const SizedBox(
+              height: 50,
+            ),
+            Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Color.fromARGB(143, 158, 158, 158),
+                ),
+                width: 350,
+                height: 300,
+                child: Column(children: [
+                  Row(children: [
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      '溫度',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      '$tempValue°C',
+                      style: TextStyle(fontSize: 20),
+                    )
+                  ]),
+                  CircleWaveProgress(
+                    size: 230,
+                    borderWidth: 10.0,
+                    backgroundColor: Colors.transparent,
+                    borderColor: Colors.grey,
+                    waveColor: Color.fromARGB(143, 33, 149, 243),
+                    progress: tempValue,
+                  )
+                ])),
+            SizedBox(height: 50),
+            Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Color.fromARGB(143, 158, 158, 158),
+                ),
+                width: 350,
+                height: 300,
+                child: Column(children: [
+                  Row(children: [
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      '亮度',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                  ]),
+                  SimpleCircularProgressBar(
+                    size: 200,
+                    valueNotifier: valueNotifier,
+                    progressStrokeWidth: 24,
+                    backStrokeWidth: 24,
+                    mergeMode: true,
+                    onGetText: (value) {
+                      return Text(
+                        '${value.toInt()}%',
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Color.fromARGB(255, 210, 145, 91),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
+                    progressColors: const [
+                      Color.fromARGB(255, 163, 81, 44),
+                      Color.fromARGB(255, 255, 214, 110),
+                    ],
+                    backColor: Colors.black.withOpacity(0.4),
+                  )
+                ])),
+            SizedBox(height: 50),
+            Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Color.fromARGB(143, 158, 158, 158),
+                ),
+                width: 350,
+                height: 300,
+                child: Column(children: [
+                  Row(children: [
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      '空氣品質',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                  ]),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  SimpleCircularProgressBar(
+                    size: 200,
+                    valueNotifier: valueNotifier2,
+                    progressStrokeWidth: 24,
+                    backStrokeWidth: 24,
+                    mergeMode: true,
+                    onGetText: (value) {
+                      return Text(
+                        '${airValue.toInt()}ppm',
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.lightBlue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
+                    progressColors: const [Colors.cyan, Colors.purple],
+                    backColor: Colors.black.withOpacity(0.4),
+                  )
+                ])),
+            SizedBox(
+              height: 40,
             ),
             SizedBox(
               height: 20,
@@ -321,12 +387,18 @@ class _ControlPageState extends State<ControlPage> {
   }
 
   void changePage(context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Gpower()));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                Gpower(connection: widget.connection!, device: widget.device)));
   }
 
   @override
   void dispose() {
     valueNotifier!.dispose();
+    valueNotifier2!.dispose();
+
     super.dispose();
   }
 }

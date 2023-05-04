@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
+  BluetoothConnection? connection;
+  HomePage({super.key, this.connection});
   @override
   State<HomePage> createState() => HomePageState();
 }
@@ -57,11 +59,17 @@ class HomePageState extends State<HomePage> {
   }
 
   //////////////////////////////////////////////////////////////////////////////
+  void disconnect() async {
+    if (widget.connection != null) {
+      await widget.connection!.close();
+    }
+  }
 
   @override
   void initState() {
     requestPermission();
     requestPermission2();
+    disconnect();
     super.initState();
 
     FlutterBluetoothSerial.instance.state.then((state) {
@@ -170,7 +178,10 @@ class HomePageState extends State<HomePage> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ControlPage(connection: connection!)));
+            builder: (context) => ControlPage(
+                  connection: connection!,
+                  device: _device,
+                )));
   }
 
   Future show(

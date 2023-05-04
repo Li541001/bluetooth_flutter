@@ -1,3 +1,4 @@
+import 'package:first_test/components/button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -21,10 +22,34 @@ class AlertBox extends StatelessWidget {
       content: Container(
         height: 200,
         child: Column(children: [
-          Text(''),
-          Row(children: [
-            TextButton(onPressed: () => callPhone, child: Text('打電話')),
-            TextButton(onPressed: () => leave(context), child: Text('離開'))
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            '系統偵測您已發生車禍',
+            style: TextStyle(fontSize: 18, color: Colors.redAccent),
+          ),
+          Text(
+            '請問需要撥打電話或緊急連絡人嗎?',
+            style: TextStyle(fontSize: 18, color: Colors.redAccent),
+          ),
+          SizedBox(
+            height: 40,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Button(
+                onPressed: () => callPhone(),
+                text: '打電話',
+                disabled: true,
+                size: 120),
+            SizedBox(
+              width: 20,
+            ),
+            Button(
+                onPressed: () => leave(context),
+                text: '離開',
+                disabled: true,
+                size: 120),
           ])
         ]),
       ),
