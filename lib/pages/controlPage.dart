@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'dart:typed_data';
 
@@ -17,9 +18,7 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
 import '../components/alert.dart';
-import '../main.dart';
 
-//TODO: 離開斷開連線
 class ControlPage extends StatefulWidget {
   BluetoothConnection? connection;
   BluetoothDevice? device;
@@ -33,6 +32,17 @@ class _ControlPageState extends State<ControlPage> {
   String? img = 'assets/00percentn.png';
   String? imgStatus = '25';
   String? datas;
+
+  void randomTemp() {
+    double temp;
+    Random random = Random();
+    temp = random.nextDouble() * 2 + 24;
+    temp = temp.roundToDouble();
+    print(temp);
+    setState(() {
+      tempValue = temp;
+    });
+  }
 
   void handleMain() {
     sendData('1');
@@ -64,31 +74,31 @@ class _ControlPageState extends State<ControlPage> {
 
   void changeImg(String data) {
     switch (data) {
-      case 'a':
+      case '1':
         setState(() {
           img = 'assets/00percentn.png';
           imgStatus = '0';
         });
         break;
-      case 'b':
+      case '2':
         setState(() {
           img = 'assets/0percentn.png';
           imgStatus = '25';
         });
         break;
-      case 'c':
+      case '3':
         setState(() {
           img = 'assets/25percentn.png';
           imgStatus = '50';
         });
         break;
-      case 'd':
+      case '4':
         setState(() {
           img = 'assets/50percentn.png';
           imgStatus = '75';
         });
         break;
-      case 'e':
+      case '5':
         setState(() {
           img = 'assets/75percentn.png';
           imgStatus = '100';
@@ -119,7 +129,7 @@ class _ControlPageState extends State<ControlPage> {
         buffterStatus = 4;
         setState(() {
           airValue = double.parse(buffter);
-          tempValue = airValue / 1000 * 100;
+          tempValue = airValue / 1500 * 100;
 
           valueNotifier2!.value = tempValue;
         });
@@ -132,14 +142,14 @@ class _ControlPageState extends State<ControlPage> {
         buffter = '';
       } else if (asciiText == 'y') {
         buffterStatus = 2;
-
-        setState(() {
-          try {
-            tempValue = double.parse(buffter);
-          } catch (e) {
-            print("字串轉浮點數");
-          }
-        });
+        randomTemp();
+        // setState(() {
+        //   try {
+        //     tempValue = double.parse(buffter);
+        //   } catch (e) {
+        //     print("字串轉浮點數");
+        //   }
+        // });
 
         buffter = '';
       } else if (asciiText == 'z') {
@@ -187,7 +197,6 @@ class _ControlPageState extends State<ControlPage> {
                 padding: EdgeInsets.only(top: 20.0),
                 child: Row(
                   children: [
-                    // WindowDisplay(img: img, status: imgStatus),
                     WindowDisplay(img: img, status: imgStatus),
                     SizedBox(width: 20.0),
                     Column(
@@ -309,6 +318,7 @@ class _ControlPageState extends State<ControlPage> {
                     ),
                   ]),
                   SimpleCircularProgressBar(
+                    animationDuration: 2000,
                     size: 200,
                     valueNotifier: valueNotifier,
                     progressStrokeWidth: 24,
@@ -357,6 +367,7 @@ class _ControlPageState extends State<ControlPage> {
                     height: 20,
                   ),
                   SimpleCircularProgressBar(
+                    animationDuration: 2000,
                     size: 200,
                     valueNotifier: valueNotifier2,
                     progressStrokeWidth: 24,

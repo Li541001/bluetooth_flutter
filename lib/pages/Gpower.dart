@@ -71,8 +71,6 @@ class GpowerState extends State<Gpower> {
   void initState() {
     super.initState();
     disconnect();
-
-    print('isConnect');
   }
 
   @override
@@ -83,7 +81,8 @@ class GpowerState extends State<Gpower> {
           backgroundColor: Color.fromARGB(255, 255, 146, 37),
           elevation: 0.0,
         ),
-        body: Container(
+        body: SingleChildScrollView(
+            child: Container(
           child: Center(
               child: Column(children: [
             Image(image: AssetImage('assets/G.png')),
@@ -94,11 +93,12 @@ class GpowerState extends State<Gpower> {
             SizedBox(
               height: 5,
             ),
-            Text('經緯度'),
+            Text(
+                '緯度: 25.02616 經度: 121.52756'), //台師大: 緯度: 25.02616 經度: 121.52756
             SizedBox(
               height: 5,
             ),
-            Text('地址'),
+            Text('台北市大安區和平東路一段162號'),
             SizedBox(
               height: 20,
             ),
@@ -122,6 +122,6 @@ class GpowerState extends State<Gpower> {
                   )
                 ])),
           ])),
-        ));
+        )));
   }
 }

@@ -19,6 +19,9 @@ class _ControlSliderState extends State<ControlSlider> {
   @override
   Widget build(BuildContext context) {
     return (Slider(
+        activeColor: Color.fromARGB(255, 253, 185, 116),
+        thumbColor: Color.fromARGB(255, 255, 146, 37),
+        inactiveColor: Colors.grey,
         min: 0.0,
         max: 100.0,
         value: _value,
