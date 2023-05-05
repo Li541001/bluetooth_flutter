@@ -28,15 +28,16 @@ class _ControlSliderState extends State<ControlSlider> {
         divisions: 4,
         label: '${_value.round()}',
         onChanged: (value) {
-          if (value == 0) {
+          print(value);
+          if (value == 0.0) {
             widget.action();
-          } else if (value == 25) {
+          } else if (value == 25.0) {
             widget.action2();
-          } else if (value == 50) {
+          } else if (value == 50.0) {
             widget.action3();
-          } else if (value == 75) {
+          } else if (value == 75.0) {
             widget.action4();
-          } else if (value == 100) {
+          } else if (value == 100.0) {
             widget.action5();
           }
           setState(() {

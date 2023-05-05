@@ -85,7 +85,7 @@ class GpowerState extends State<Gpower> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Connect'),
+          title: Text('G力'),
           backgroundColor: Color.fromARGB(255, 255, 146, 37),
           elevation: 0.0,
         ),
@@ -97,7 +97,7 @@ class GpowerState extends State<Gpower> {
             SizedBox(
               height: 20,
             ),
-            Image(image: AssetImage('assets/mapImg.png')),
+            Image(image: AssetImage('assets/mapTeacher.png')),
             SizedBox(
               height: 5,
             ),

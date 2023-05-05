@@ -28,6 +28,15 @@ class HomePageState extends State<HomePage> {
   BluetoothDevice? _device;
   String? datas;
   bool _conncted = false;
+  // void changePage2(context) {
+  //   Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //           builder: (context) => ControlPage(
+  //                 connection: connection!,
+  //                 device: _device,
+  //               )));
+  // }
 
   //////////////////////////////////////////////////////////////////////////////
   //要求權限
@@ -247,7 +256,12 @@ class HomePageState extends State<HomePage> {
                         text: '切換頁面',
                         disabled: _conncted,
                         size: 200,
-                      )
+                      ),
+                      // Button(
+                      //     onPressed: () => changePage2(context),
+                      //     text: '切換頁面',
+                      //     disabled: true,
+                      //     size: 200),
                     ],
                   ),
                 ],

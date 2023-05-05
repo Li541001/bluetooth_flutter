@@ -19,7 +19,7 @@ class AlertBox extends StatelessWidget {
     return AlertDialog(
       backgroundColor: Colors.orange[50],
       content: Container(
-        height: 200,
+        height: 230,
         child: Column(children: [
           SizedBox(
             height: 20,

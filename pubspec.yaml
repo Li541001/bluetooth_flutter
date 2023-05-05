@@ -73,6 +73,7 @@ flutter:
     - assets/0percentn.png
     - assets/00percentn.png
     - assets/mapImg.png
+    - assets/mapTeacher.png
     - assets/G.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
