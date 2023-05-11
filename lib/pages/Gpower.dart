@@ -97,16 +97,17 @@ class GpowerState extends State<Gpower> {
             SizedBox(
               height: 20,
             ),
-            Image(image: AssetImage('assets/mapTeacher.png')),
+            Image(image: AssetImage('assets/mpaA.jpg')),
             SizedBox(
               height: 5,
             ),
             Text(
-                '緯度: 25.02616 經度: 121.52756'), //台師大: 緯度: 25.02616 經度: 121.52756
+                '緯度: 24.08154 經度: 120.55851'), //台師大: 緯度: 25.02616 經度: 121.52756   彰師大:緯度:24.08154, 經度:120.55851  彰化縣彰化市進德路1號
+
             SizedBox(
               height: 5,
             ),
-            Text('台北市大安區和平東路一段162號'),
+            Text('彰化縣彰化市進德路1號'),
             SizedBox(
               height: 20,
             ),
